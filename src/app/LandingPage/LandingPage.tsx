@@ -3,14 +3,107 @@ import Shuffle from "../../components/Shuffle";
 import GlassSurface from "../../components/GlassSurface";
 import Silk from "../../components/Silk";
 import { useAuth } from "../../contexts/AuthContext";
-import "./Dashboard.css";
+import { useEffect, useRef, useState } from "react";
+import "./LandingPage.css";
 
 
-export default function Dashboard() {
+export default function LandingPage() {
     const {user}=useAuth();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [currentSection, setCurrentSection] = useState(0);
+    const [scrollProgress, setScrollProgress] = useState(0);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        // Mouse wheel scroll - simplified
+        const handleWheel = () => {
+            // Allow default scroll behavior
+            // Just track scroll position
+        };
+
+        // Touch scroll for mobile - simplified
+        const handleTouchStart = () => {
+            // Allow default touch behavior
+        };
+
+        const handleTouchMove = () => {
+            // Allow default touch behavior
+        };
+
+        // Keyboard scroll
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const scrollAmount = 100;
+            switch (e.key) {
+                case 'ArrowDown':
+                case 'PageDown':
+                case ' ':
+                    e.preventDefault();
+                    container.scrollTop += scrollAmount;
+                    break;
+                case 'ArrowUp':
+                case 'PageUp':
+                    e.preventDefault();
+                    container.scrollTop -= scrollAmount;
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    container.scrollTop = 0;
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    container.scrollTop = container.scrollHeight;
+                    break;
+            }
+        };
+
+        // Scroll position tracking
+        const handleScroll = () => {
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+            const scrollPercentage = scrollTop / (scrollHeight - clientHeight);
+            
+            // Update current section (0-9)
+            setCurrentSection(Math.round(scrollPercentage * 9));
+            
+            // Update scroll progress (0-1) for indicator movement
+            setScrollProgress(scrollPercentage);
+        };
+
+        // Add event listeners
+        container.addEventListener('wheel', handleWheel, { passive: true });
+        container.addEventListener('touchstart', handleTouchStart, { passive: true });
+        container.addEventListener('touchmove', handleTouchMove, { passive: true });
+        container.addEventListener('scroll', handleScroll);
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup
+        return () => {
+            container.removeEventListener('wheel', handleWheel);
+            container.removeEventListener('touchstart', handleTouchStart);
+            container.removeEventListener('touchmove', handleTouchMove);
+            container.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
+    const scrollToSection = (sectionIndex: number) => {
+        const container = containerRef.current;
+        if (!container) return;
+        
+        const scrollHeight = container.scrollHeight;
+        const clientHeight = container.clientHeight;
+        const targetScroll = (scrollHeight - clientHeight) * (sectionIndex / 9);
+        container.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+        });
+    };
 
     return (
-        <div className="dashboard-container">
+        <div className="landingpage-container" ref={containerRef}>
             {/* Silk Background */}
             <div className="silk-background">
                     <Silk
@@ -23,16 +116,16 @@ export default function Dashboard() {
             </div>
 
             {/* Main Content Area with scroll */}
-            <div className="dashboard-main-content">
-                <main className="dashboard-main">
+            <div className="landingpage-main-content">
+                <main className="landingpage-main">
                     {/* Content Container with proper spacing */}
-                    <div className="dashboard-content">
+                    <div className="landingpage-content">
                         {/* Header Section */}
-                        <div className="dashboard-header">
+                        <div className="landingpage-header">
                             <Shuffle
-                                text="Dashboard"
+                                text="LANDING PAGE"
                                 tag="h1"
-                                className="dashboard-title"
+                                className="landingpage-title"
                                 shuffleDirection="right"
                                 duration={0.6}
                                 animationMode="evenodd"
@@ -48,9 +141,9 @@ export default function Dashboard() {
                                 colorTo=""
                             />
                             <Shuffle
-                                text={`Hoş geldiniz! ${user?.username || 'Kullanıcı'} Dashboard'dasınız şuan.`}
+                                text={`HOŞ GELDİNİZ! ${user?.username || 'KULLANICI'} LANDING PAGE'DASINIZ ŞUAN.`}
                                 tag="p"
-                                className="dashboard-subtitle"
+                                className="landingpage-subtitle"
                                 shuffleDirection="right"
                                 duration={0.8}
                                 animationMode="evenodd"
@@ -67,15 +160,55 @@ export default function Dashboard() {
                             />
                         </div>
                         
-                        {/* Dashboard Content Area */}
-                        <div className="dashboard-content-area">
-                            {/* Hero Image Section */}
+                        {/* Landing Page Content Area */}
+                        <div className="landingpage-content-area">
+                            {/* Hero Image Section with Text Overlay */}
                             <div className="hero-image-section">
-                                <img 
-                                    src="https://images.unsplash.com/photo-1594576547505-1be67997401e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Modern Technology"
-                                    className="hero-image"
-                                />
+                                <div className="hero-image-container">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1594576547505-1be67997401e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Modern Technology"
+                                        className="hero-image"
+                                    />
+                                    <div className="hero-text-overlay">
+                                        <Shuffle
+                                            text="LANDING PAGE"
+                                            tag="h1"
+                                            className="hero-title"
+                                            shuffleDirection="right"
+                                            duration={0.6}
+                                            animationMode="evenodd"
+                                            shuffleTimes={1}
+                                            ease="power2.out"
+                                            stagger={0.05}
+                                            threshold={0.1}
+                                            triggerOnce={true}
+                                            triggerOnHover={false}
+                                            respectReducedMotion={true}
+                                            onShuffleComplete={() => {}}
+                                            colorFrom=""
+                                            colorTo=""
+                                        />
+                                        <Shuffle
+                                            text={`HOŞ GELDİNİZ! ${user?.username || 'KULLANICI'} LANDING PAGE'DASINIZ ŞUAN.`}
+                                            tag="p"
+                                            className="hero-subtitle"
+                                            shuffleDirection="right"
+                                            duration={0.8}
+                                            animationMode="evenodd"
+                                            shuffleTimes={1}
+                                            ease="power2.out"
+                                            stagger={0.03}
+                                            threshold={0.1}
+                                            triggerOnce={true}
+                                            triggerOnHover={false}
+                                            respectReducedMotion={true}
+                                            onShuffleComplete={() => {}}
+                                            colorFrom=""
+                                            colorTo=""
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
                     {/* Sample content for scroll testing */}
@@ -96,7 +229,7 @@ export default function Dashboard() {
                         <div className="content-section">
                             <h2 className="section-title">Hoş Geldiniz</h2>
                             <p className="section-text">
-                                Bu modern dashboard'da çeşitli özellikler ve araçlar bulabilirsiniz. 
+                                Bu modern landing page'de çeşitli özellikler ve araçlar bulabilirsiniz. 
                                 Aşağıdaki içerikler scroll özelliğini test etmek için eklenmiştir.
                             </p>
                         </div>
@@ -364,7 +497,7 @@ export default function Dashboard() {
                                             <div className="update-icon">🚀</div>
                                             <div className="update-content">
                                                 <h4>Yeni Özellik Eklendi</h4>
-                                                <p>Dashboard'a Silk animasyon efekti eklendi</p>
+                                                <p>Landing page'e Silk animasyon efekti eklendi</p>
                                                 <span className="update-time">2 saat önce</span>
                                             </div>
                                         </div>
@@ -555,7 +688,7 @@ export default function Dashboard() {
                                             <div className="timeline-marker"></div>
                                             <div className="timeline-content">
                                                 <h4>Proje Başlangıcı</h4>
-                                                <p>Dashboard projesi başlatıldı ve temel yapı oluşturuldu</p>
+                                                <p>Landing page projesi başlatıldı ve temel yapı oluşturuldu</p>
                                                 <span className="timeline-date">1 hafta önce</span>
                                             </div>
                                         </div>
@@ -615,7 +748,7 @@ export default function Dashboard() {
                                         <div className="feedback-card positive">
                                             <div className="feedback-icon">👍</div>
                                             <h4>Mükemmel Tasarım</h4>
-                                            <p>"Dashboard'ın görsel tasarımı çok etkileyici ve kullanıcı dostu."</p>
+                                            <p>"Landing page'in görsel tasarımı çok etkileyici ve kullanıcı dostu."</p>
                                             <div className="feedback-author">- Mehmet K.</div>
                                         </div>
                                         <div className="feedback-card positive">
@@ -773,7 +906,7 @@ export default function Dashboard() {
                                 <div className="content-section footer-section">
                                     <h2 className="section-title">Proje Hakkında</h2>
                                     <p className="section-text">
-                                        Bu dashboard modern web teknolojileri kullanılarak geliştirilmiştir. 
+                                        Bu landing page modern web teknolojileri kullanılarak geliştirilmiştir. 
                                         React, TypeScript, Tailwind CSS ve Three.js gibi güncel teknolojiler 
                                         ile oluşturulan bu proje, kullanıcı deneyimini ön planda tutarak 
                                         performanslı ve görsel olarak etkileyici bir arayüz sunmaktadır.
@@ -790,6 +923,24 @@ export default function Dashboard() {
                     </div>
                 </main>
             </div>
+            
+            {/* Scroll Indicator */}
+            <div 
+                className="scroll-indicator"
+                style={{
+                    transform: `translateY(calc(-50% + ${scrollProgress * 200}px))`
+                }}
+            >
+                {Array.from({ length: 10 }, (_, index) => (
+                    <div
+                        key={index}
+                        className={`scroll-dot ${currentSection === index ? 'active' : ''}`}
+                        onClick={() => scrollToSection(index)}
+                        title={`Section ${index + 1}`}
+                    />
+                ))}
+            </div>
+
             
             {/* Dock Component */}
             <Dock />

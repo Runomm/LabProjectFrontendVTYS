@@ -2,6 +2,7 @@ import Dock from "../../components/Dock";
 import Shuffle from "../../components/Shuffle";
 import GlassSurface from "../../components/GlassSurface";
 import Silk from "../../components/Silk";
+import CountUp from "../../components/CountUp";
 import { useAuth } from "../../contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import "./LandingPage.css";
@@ -12,6 +13,8 @@ export default function LandingPage() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [currentSection, setCurrentSection] = useState(0);
     const [scrollProgress, setScrollProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [showCountUp, setShowCountUp] = useState(true);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -102,6 +105,32 @@ export default function LandingPage() {
         });
     };
 
+    // CountUp Overlay
+    const countUpOverlay = (
+        <div className={`countup-overlay ${!showCountUp ? 'fade-out' : ''}`}>
+            <div className="loading-content">
+                <div className="loading-logo">
+                    <CountUp
+                        from={0}
+                        to={100}
+                        separator=""
+                        direction="up"
+                        duration={2}
+                        className="loading-percentage"
+                        onEnd={() => {
+                            setTimeout(() => {
+                                setShowCountUp(false);
+                                setTimeout(() => setIsLoading(false), 1000); // Wait for fade out
+                            }, 500);
+                        }}
+                    />
+                    <span className="loading-percent-symbol">%</span>
+                </div>
+                <div className="loading-text">LANDING PAGE YÜKLENİYOR...</div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="landingpage-container" ref={containerRef}>
             {/* Silk Background */}
@@ -176,11 +205,12 @@ export default function LandingPage() {
                                             tag="h1"
                                             className="hero-title"
                                             shuffleDirection="right"
-                                            duration={0.6}
+                                            duration={1.5}
+                                            delay={1.0}
                                             animationMode="evenodd"
                                             shuffleTimes={1}
                                             ease="power2.out"
-                                            stagger={0.05}
+                                            stagger={0.1}
                                             threshold={0.1}
                                             triggerOnce={true}
                                             triggerOnHover={false}
@@ -194,11 +224,12 @@ export default function LandingPage() {
                                             tag="p"
                                             className="hero-subtitle"
                                             shuffleDirection="right"
-                                            duration={0.8}
+                                            duration={2.0}
+                                            delay={1.5}
                                             animationMode="evenodd"
                                             shuffleTimes={1}
                                             ease="power2.out"
-                                            stagger={0.03}
+                                            stagger={0.08}
                                             threshold={0.1}
                                             triggerOnce={true}
                                             triggerOnHover={false}
@@ -944,6 +975,9 @@ export default function LandingPage() {
             
             {/* Dock Component */}
             <Dock />
+            
+            {/* CountUp Overlay */}
+            {countUpOverlay}
         </div>
     );
 }

@@ -14,6 +14,7 @@ const Shuffle = ({
   shuffleDirection = 'right',
   duration = 0.35,
   maxDelay = 0,
+  delay = 0,
   ease = 'power3.out',
   threshold = 0.1,
   rootMargin = '-100px',
@@ -210,6 +211,7 @@ const Shuffle = ({
 
         const tl = gsap.timeline({
           smoothChildTiming: true,
+          delay: delay,
           repeat: loop ? -1 : 0,
           repeatDelay: loop ? loopDelay : 0,
           onRepeat: () => {

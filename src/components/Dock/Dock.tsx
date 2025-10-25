@@ -52,14 +52,14 @@ export default function Dock() {
           width="auto"
           height={90}
           borderRadius={29}
-          displace={15}
-          distortionScale={-150}
-          redOffset={5}
-          greenOffset={15}
-          blueOffset={25}
-          brightness={90}
-          opacity={0.85}
-          mixBlendMode="normal"
+          displace={25}
+          distortionScale={-300}
+          redOffset={10}
+          greenOffset={25}
+          blueOffset={40}
+          brightness={80}
+          opacity={0.9}
+          mixBlendMode="screen"
           className="dock-glass-surface"
         >
           <div className="dock">
@@ -87,7 +87,7 @@ export default function Dock() {
                 <motion.div
                   className={`dock-item ${activeItem === item.id ? 'active' : ''}`}
                   animate={{
-                    backgroundColor: activeItem === item.id ? '#3b82f6' : 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: activeItem === item.id ? '#d9b38c' : 'rgba(255, 255, 255, 0.1)',
                     scale: hoveredItem === item.id ? 1.1 : 1,
                   }}
                   transition={{ duration: 0.2 }}

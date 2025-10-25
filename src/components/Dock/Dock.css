@@ -54,9 +54,9 @@
 }
 
 .dock-item.active {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #d9b38c, #c4a078);
   box-shadow: 
-    0 8px 25px rgba(59, 130, 246, 0.4),
+    0 8px 25px rgba(217, 179, 140, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
